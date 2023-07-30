@@ -272,6 +272,7 @@ public class SpringApplication {
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
 		this.bootstrapRegistryInitializers = new ArrayList<>(
 				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
+		// 通过SPI机制获取
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
 		this.mainApplicationClass = deduceMainApplicationClass();
@@ -306,9 +307,11 @@ public class SpringApplication {
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
 			Banner printedBanner = printBanner(environment);
+			// 创建spring容器
 			context = createApplicationContext();
 			context.setApplicationStartup(this.applicationStartup);
 			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
+			// 加载spring容器
 			refreshContext(context);
 			afterRefresh(context, applicationArguments);
 			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
